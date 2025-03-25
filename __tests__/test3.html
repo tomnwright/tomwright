@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Monospace Letter Grid with Precise Alignment</title>
+  <style>
+    body, html {
+      margin: 0;
+      padding: 0;
+      height: 100%;
+      width: 100%;
+      overflow: hidden;
+      background: black;
+      font-family: monospace;
+      font-size: 16px;
+    }
+    
+    #container {
+      position: relative;
+      height: 100vh;
+      width: 100vw;
+      overflow: hidden;
+    }
+    
+    #textGrid {
+      position: absolute;
+      top: 0;
+      left: 0;
+      white-space: pre;
+      color: #555; /* Dark grey default color */
+      font-family: monospace;
+      font-size: 16px;
+      user-select: none;
+      cursor: default;
+      line-height: 1;
+      padding: 0;
+      margin: 0;
+    }
+    
+    #highlights {
+      position: absolute;
+      top: 0;
+      left: 0;
+      white-space: pre;
+      color: white;
+      font-family: monospace;
+      font-size: 16px;
+      pointer-events: none;
+      z-index: 5;
+      line-height: 1;
+      padding: 0;
+      margin: 0;
+    }
+    
+    #selectionBox {
+      position: absolute;
+      border: 2px solid #00ff00;
+      border-radius: 10px;
+      pointer-events: none;
+      display: none;
+      box-shadow: 0 0 10px rgba(0, 255, 0, 0.5);
+      z-index: 10;
+    }
+    
+    .controls {
+      position: fixed;
+      bottom: 10px;
+      left: 10px;
+      background: rgba(0, 0, 0, 0.7);
+      padding: 10px;
+      border-radius: 5px;
+      z-index: 100;
+    }
+    
+    button {
+      background: #333;
+      color: white;
+      border: 1px solid #555;
+      border-radius: 3px;
+      padding: 5px 10px;
+      cursor: pointer;
+    }
+    
+    button:hover {
+      background: #444;
+    }
+    
+    /* Critical for precise alignment */
+    #textGrid, #highlights {
+      transform-origin: top left;
+    }
+  </style>
+</head>
+<body>
+  <div id="container">
+    <pre id="textGrid"></pre>
+    <pre id="highlights"></pre>
+    <div id="selectionBox"></div>
+  </div>
+  
+  <div class="controls">
+    <button id="clearButton">Clear Selection</button>
+  </div>
+
+  <script>
+    // Globals
+    let gridText = '';
+    let highlightText = '';
+    let charWidth, charHeight;
+    let rows = 0;
+    let cols = 0;
+    let characters = [];
+    let isSelecting = false;
+    let startCell = { row: 0, col: 0 };
+    let endCell = { row: 0, col: 0 };
+    
+    // DOM Elements
+    const container = document.getElementById('container');
+    const textGrid = document.getElementById('textGrid');
+    const highlights = document.getElementById('highlights');
+    const selectionBox = document.getElementById('selectionBox');
+    
+    function generateRandomLetter() {
+      const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
+      return chars.charAt(Math.floor(Math.random() * chars.length));
+    }
+    
+    function measureCharacter() {
+      // Measure by creating a test grid of characters
+      const testElement = document.createElement('pre');
+      testElement.style.fontFamily = 'monospace';
+      testElement.style.fontSize = '16px';
+      testElement.style.position = 'absolute';
+      testElement.style.visibility = 'hidden';
+      testElement.style.whiteSpace = 'pre';
+      testElement.style.margin = '0';
+      testElement.style.padding = '0';
+      testElement.style.lineHeight = '1';
+      
+      // Create a small grid for measurement
+      const testRow = 'X'.repeat(10);
+      testElement.textContent = testRow + '\n' + testRow;
+      
+      document.body.appendChild(testElement);
+      
+      // Get exact measurements
+      const rect = testElement.getBoundingClientRect();
+      charWidth = rect.width / 10;  // Width of one character
+      charHeight = rect.height / 2;  // Height of one line
+      
+      document.body.removeChild(testElement);
+    }
+    
+    function createGrid() {
+      // Measure character dimensions
+      measureCharacter();
+      
+      // Calculate grid dimensions
+      cols = Math.floor(window.innerWidth / charWidth);
+      rows = Math.floor(window.innerHeight / charHeight);
+      
+      // Generate the characters array
+      characters = new Array(rows);
+      for (let i = 0; i < rows; i++) {
+        characters[i] = new Array(cols);
+        for (let j = 0; j < cols; j++) {
+          characters[i][j] = generateRandomLetter();
+        }
+      }
+      
+      // Build the grid text
+      gridText = '';
+      for (let i = 0; i < rows; i++) {
+        gridText += characters[i].join('') + '\n';
+      }
+      
+      // Set the text
+      textGrid.textContent = gridText;
+      
+      // Clear the highlights
+      highlights.textContent = ' '.repeat(cols) + '\n'.repeat(rows-1);
+    }
+    
+    function getGridCellFromEvent(e) {
+      const rect = textGrid.getBoundingClientRect();
+      const x = e.clientX - rect.left;
+      const y = e.clientY - rect.top;
+      
+      const col = Math.floor(x / charWidth);
+      const row = Math.floor(y / charHeight);
+      
+      // Make sure we stay within bounds
+      return { 
+        row: Math.max(0, Math.min(row, rows - 1)),
+        col: Math.max(0, Math.min(col, cols - 1))
+      };
+    }
+    
+    function startSelection(e) {
+      isSelecting = true;
+      startCell = getGridCellFromEvent(e);
+      endCell = { ...startCell };
+      updateSelection();
+    }
+    
+    function updateSelectionMove(e) {
+      if (isSelecting) {
+        endCell = getGridCellFromEvent(e);
+        updateSelection();
+      }
+    }
+    
+    function endSelection() {
+      isSelecting = false;
+    }
+    
+    function updateSelection() {
+      // Calculate the rectangle bounds
+      const minRow = Math.max(0, Math.min(startCell.row, endCell.row));
+      const maxRow = Math.min(rows-1, Math.max(startCell.row, endCell.row));
+      const minCol = Math.max(0, Math.min(startCell.col, endCell.col));
+      const maxCol = Math.min(cols-1, Math.max(startCell.col, endCell.col));
+      
+      // Update selection box - use the precise character measurements
+      const left = minCol * charWidth;
+      const top = minRow * charHeight;
+      const width = (maxCol - minCol + 1) * charWidth;
+      const height = (maxRow - minRow + 1) * charHeight;
+      
+      selectionBox.style.left = left + 'px';
+      selectionBox.style.top = top + 'px';
+      selectionBox.style.width = width + 'px';
+      selectionBox.style.height = height + 'px';
+      selectionBox.style.display = 'block';
+      
+      // Create highlight text with exact character-by-character precision
+      let highlightRows = [];
+      for (let i = 0; i < rows; i++) {
+        let rowText = '';
+        for (let j = 0; j < cols; j++) {
+          if (i >= minRow && i <= maxRow && j >= minCol && j <= maxCol) {
+            rowText += characters[i][j];
+          } else {
+            rowText += ' ';
+          }
+        }
+        highlightRows.push(rowText);
+      }
+      
+      highlights.textContent = highlightRows.join('\n');
+    }
+    
+    function clearSelection() {
+      selectionBox.style.display = 'none';
+      let emptyRows = [];
+      for (let i = 0; i < rows; i++) {
+        emptyRows.push(' '.repeat(cols));
+      }
+      highlights.textContent = emptyRows.join('\n');
+    }
+    
+    // Initialize
+    createGrid();
+    
+    // Event listeners
+    container.addEventListener('mousedown', startSelection);
+    container.addEventListener('mousemove', updateSelectionMove);
+    container.addEventListener('mouseup', endSelection);
+    document.getElementById('clearButton').addEventListener('click', clearSelection);
+    
+    // Handle window resize
+    window.addEventListener('resize', () => {
+      createGrid();
+      clearSelection();
+    });
+  </script>
+</body>
+</html>

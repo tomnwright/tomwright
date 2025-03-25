@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Monospace Grid</title>
+  <style>
+    body, html {
+      margin: 0;
+      padding: 0;
+      height: 100%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-family: monospace;
+      overflow: hidden;
+    }
+    #grid {
+      white-space: pre;
+      font-size: 16px;
+      letter-spacing: 2px;
+      line-height: 1.5em;
+      padding: 10px;
+    }
+  </style>
+</head>
+<body>
+  <div id="grid"></div>
+  <script>
+    function generateGrid() {
+      const fontSize = 16;  // Set your desired font size
+      const letterSpacing = 2;  // Set your desired horizontal spacing
+      const lineHeight = 1.5;  // Set your desired vertical spacing
+      const cols = Math.floor(window.innerWidth / (fontSize + letterSpacing));
+      const rows = Math.floor(window.innerHeight / (fontSize * lineHeight));
+
+      const gridContent = 'X'.repeat(cols) + '\n';
+      const grid = gridContent.repeat(rows);
+      document.getElementById('grid').textContent = grid;
+    }
+
+    window.addEventListener('resize', generateGrid);
+    generateGrid();
+  </script>
+</body>
+</html>

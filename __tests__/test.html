@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Random Letter Grid</title>
+  <style>
+    body, html {
+      margin: 0;
+      padding: 0;
+      height: 100%;
+      width: 100%;
+      overflow: hidden;
+      background: black;
+      color: white;
+      font-family: monospace;
+    }
+    
+    #grid {
+      display: grid;
+      height: 100vh;
+      width: 100vw;
+    }
+    
+    .letter {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-size: 16px;
+    }
+  </style>
+</head>
+<body>
+  <div id="grid"></div>
+
+  <script>
+    function generateRandomLetter() {
+      const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
+      return chars.charAt(Math.floor(Math.random() * chars.length));
+    }
+    
+    function createGrid() {
+      const grid = document.getElementById('grid');
+      const letterSize = 16; // font size in pixels
+      
+      // Calculate rows and columns based on viewport size
+      const columns = Math.floor(window.innerWidth / letterSize);
+      const rows = Math.floor(window.innerHeight / letterSize);
+      
+      // Set grid template
+      grid.style.gridTemplateColumns = `repeat(${columns}, 1fr)`;
+      grid.style.gridTemplateRows = `repeat(${rows}, 1fr)`;
+      
+      // Clear previous grid if any
+      grid.innerHTML = '';
+      
+      // Create letters
+      for (let i = 0; i < rows * columns; i++) {
+        const letterDiv = document.createElement('div');
+        letterDiv.className = 'letter';
+        letterDiv.textContent = generateRandomLetter();
+        grid.appendChild(letterDiv);
+      }
+    }
+    
+    // Initial creation
+    createGrid();
+    
+    // Recreate on resize
+    window.addEventListener('resize', createGrid);
+  </script>
+</body>
+</html>
