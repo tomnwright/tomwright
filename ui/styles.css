@@ -7,8 +7,7 @@ html {
   overflow: hidden;
   background: black;
   font-family: monospace;
-  font-family: "JetBrains Mono", monospace;
-				font-family: "Fira Code", monospace;
+  
 }
 
 #container {
@@ -24,9 +23,8 @@ html {
   left: 0;
   white-space: pre;
   color: #3a3a3a; /* Dark grey default color */
-  user-select: none;
   cursor: default;
-  padding: 10px;
-  margin: 0;
+  user-select: none;
+  padding: 5px 10px;
   font-weight: bolder;
 }
