@@ -5,18 +5,30 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Tom Wright</title>
 
-    <link href="./ui/styles.css" rel="stylesheet" />
     <link
       href="https://fonts.googleapis.com/css2?family=Fira+Code&family=JetBrains+Mono&display=swap"
       rel="stylesheet"
     />
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
 
     <script src="/index.js" type="module"></script>
   </head>
-  <body>
-    <div id="app">
-      <div id="ui-grid"></div>
-      <div id="gol-grid"></div>
+  <body class="m-0 p-0 h-screen w-screen overflow-hidden bg-black font-mono">
+    <div id="app" class="relative h-screen w-screen overflow-hidden">
+      <div
+        id="master-grid"
+        class="invisible absolute top-0 left-0 whitespace-pre text-white cursor-default select-none px-5 py-5 font-bold"
+      ></div>
+      <!-- <div
+      id="gol-grid"
+      class="absolute top-0 left-0 whitespace-pre text-gray-800 cursor-default select-none px-5 py-1 font-bold"
+    ></div> -->
+      <div
+        id="ui-grid"
+        class="absolute top-0 left-0 whitespace-pre text-white cursor-default select-none px-5 py-5 font-bold"
+      ></div>
+
+      <!-- <div id="scrollarea" class=""></div> -->
     </div>
   </body>
 </html>
