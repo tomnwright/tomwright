@@ -14,10 +14,10 @@ const ui_div = document.getElementById("ui-grid");
 const uiGrid = new UIGrid(
   ui_div,
   Container([
-    Container(["HI there"]),
-    "Hello world,this is a big old test",
-    "Hello world,this is a big old test",
-  ])
+    Container(["Tom Wright's Porfolio"]),
+    "Cool thing 1",
+    "Cool thing 2",
+  ], true)
 );
 // const uiGrid = new TextGrid(ui_div);
 // uiGrid.domObj.textContent = "Hey"
