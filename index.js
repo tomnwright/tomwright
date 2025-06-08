@@ -1,5 +1,5 @@
 import { TextGrid, GridMaster } from "./lib/grid.js";
-import { UIGrid, Container } from "./lib/ui.js";
+import { UIGrid, Container, Textblock } from "./lib/ui.js";
 import { GoLGrid } from "./lib/gol.js";
 
 const master_div = document.getElementById("master-grid");
@@ -10,15 +10,43 @@ const ui_div = document.getElementById("ui-grid");
 // const golGrid = new TextGrid(gol_div);
 // const gol = new GoLGrid();
 
+const Header = Container({ column: false }, [
+  "TOM WRIGHT",
+  "Start typing to ask AI...",
+  Textblock("LinkedIn", {
+    styles: { cursor: "pointer" },
+    onhover: (span, enter) => {
+      span.style.fontWeight = enter ? "bold" : "";
+    },
+    link: "https://www.linkedin.com/in/tomnw/",
+  }),
+  Textblock("GitHub", {
+    styles: { cursor: "pointer" },
+    onhover: (span, enter) => {
+      span.style.fontWeight = enter ? "bold" : "";
+    },
+    link: "https://github.com/tomnwright",
+  }),
+]);
+
+const Navbar = Container({}, [
+  "About me",
+  "Freelance",
+  "Qualifications",
+  "Projects",
+  "Contact me",
+  "Chat",
+]);
+
+const Content = Container({}, ["Content", "", "", "--●----"]);
+
+const App = Container({}, [
+  Header,
+  Container({ column: false }, [Navbar, Content]),
+]);
+
 // set up ui grid object
-const uiGrid = new UIGrid(
-  ui_div,
-  Container([
-    Container(["Tom Wright's Porfolio"]),
-    "Cool thing 1",
-    "Cool thing 2",
-  ], true)
-);
+const uiGrid = new UIGrid(ui_div, App);
 // const uiGrid = new TextGrid(ui_div);
 // uiGrid.domObj.textContent = "Hey"
 
@@ -26,7 +54,7 @@ const uiGrid = new UIGrid(
 const grid = new GridMaster(master_div, [uiGrid], {
   respace: true,
   default_fontSize: 40,
-  min_spacing: { row: -8, col: 2 },
+  min_spacing: { row: -0, col: 2 },
 });
 
 console.log("Fitting...");
