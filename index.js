@@ -10,7 +10,7 @@ const ui_div = document.getElementById("ui-grid");
 // const golGrid = new TextGrid(gol_div);
 // const gol = new GoLGrid();
 
-const Header = Container({ column: false }, [
+const Header = Container({ column: false, justify: "even" }, [
   "TOM WRIGHT",
   "Start typing to ask AI...",
   Textblock("LinkedIn", {
@@ -29,7 +29,7 @@ const Header = Container({ column: false }, [
   }),
 ]);
 
-const Navbar = Container({}, [
+const Navbar = Container({justify:"even"}, [
   "About me",
   "Freelance",
   "Qualifications",
@@ -44,6 +44,7 @@ const App = Container({}, [
   Header,
   Container({ column: false }, [Navbar, Content]),
 ]);
+// const App = Container({},["Hey"]);
 
 // set up ui grid object
 const uiGrid = new UIGrid(ui_div, App);
