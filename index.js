@@ -29,7 +29,7 @@ const Header = Container({ column: false, justify: "even" }, [
   }),
 ]);
 
-const Navbar = Container({justify:"even"}, [
+const Navbar = Container({}, [
   "About me",
   "Freelance",
   "Qualifications",
