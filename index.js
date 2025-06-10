@@ -12,21 +12,23 @@ const ui_div = document.getElementById("ui-grid");
 
 const Header = Container({ column: false, justify: "even" }, [
   "TOM WRIGHT",
-  "Start typing to ask AI...",
-  Textblock("LinkedIn", {
-    styles: { cursor: "pointer" },
-    onhover: (span, enter) => {
-      span.style.fontWeight = enter ? "bold" : "";
-    },
-    link: "https://www.linkedin.com/in/tomnw/",
-  }),
-  Textblock("GitHub", {
-    styles: { cursor: "pointer" },
-    onhover: (span, enter) => {
-      span.style.fontWeight = enter ? "bold" : "";
-    },
-    link: "https://github.com/tomnwright",
-  }),
+  Textblock("Start typing to ask AI...", { wrap: true }),
+  Container({column:false}, [
+    Textblock("LinkedIn", {
+      styles: { cursor: "pointer" },
+      onhover: (span, enter) => {
+        span.style.fontWeight = enter ? "bold" : "";
+      },
+      link: "https://www.linkedin.com/in/tomnw/",
+    })," ",
+    Textblock("GitHub", {
+      styles: { cursor: "pointer" },
+      onhover: (span, enter) => {
+        span.style.fontWeight = enter ? "bold" : "";
+      },
+      link: "https://github.com/tomnwright",
+    }),
+  ]),
 ]);
 
 const Navbar = Container({}, [
