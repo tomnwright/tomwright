@@ -10,7 +10,7 @@ const ui_div = document.getElementById("ui-grid");
 // const golGrid = new TextGrid(gol_div);
 // const gol = new GoLGrid();
 
-const Header = Container({ column: false, justify: "even" }, [
+const Header = Container({ column: false, justify: "space-between" }, [
   "TOM WRIGHT",
   Textblock("Start typing to ask AI...", { wrap: true }),
   Container({ column: false }, [
@@ -21,7 +21,7 @@ const Header = Container({ column: false, justify: "even" }, [
       },
       link: "https://www.linkedin.com/in/tomnw/",
     }),
-    "+",
+    " ",
     Textblock("GitHub", {
       styles: { cursor: "pointer" },
       onhover: (span, enter) => {
@@ -32,7 +32,7 @@ const Header = Container({ column: false, justify: "even" }, [
   ]),
 ]);
 
-const Navbar = Container({}, [
+const Navbar = Container({justify:"space-between"}, [
   "About me",
   "Freelance",
   "Qualifications",
@@ -43,18 +43,22 @@ const Navbar = Container({}, [
 
 const Content = Container({}, ["Content", "", "", "--●----"]);
 
+// // main app
 const App = Container(
   {
     justify: "center",
     column: false,
   },
-  [Container({maxSize:{cols:60}}, [Header, Container({ column: false }, [Navbar, Content])])]
+  [Container({maxSize:{cols:80}}, [Header," ", Container({ column: false }, [Navbar,"       ", Content])])]
 );
 
 // Test: centre page
 // const App = Container({ justify: "center", column: false }, [
 //   Container({ justify: "center", column: true }, ["Hey"]),
 // ]);
+
+// Test: space-between
+// const App = Container({column:false, justify:"space-between"}, ["This", "is", "a", "test"])
 
 // set up ui grid object
 const uiGrid = new UIGrid(ui_div, App);
