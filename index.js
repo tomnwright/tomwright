@@ -13,14 +13,15 @@ const ui_div = document.getElementById("ui-grid");
 const Header = Container({ column: false, justify: "even" }, [
   "TOM WRIGHT",
   Textblock("Start typing to ask AI...", { wrap: true }),
-  Container({column:false}, [
+  Container({ column: false }, [
     Textblock("LinkedIn", {
       styles: { cursor: "pointer" },
       onhover: (span, enter) => {
         span.style.fontWeight = enter ? "bold" : "";
       },
       link: "https://www.linkedin.com/in/tomnw/",
-    })," ",
+    }),
+    " ",
     Textblock("GitHub", {
       styles: { cursor: "pointer" },
       onhover: (span, enter) => {
@@ -42,10 +43,14 @@ const Navbar = Container({}, [
 
 const Content = Container({}, ["Content", "", "", "--●----"]);
 
-const App = Container({}, [
-  Header,
-  Container({ column: false }, [Navbar, Content]),
-]);
+const App = 
+// Container({
+//    justify: "center",column:false
+//     // maxSize: { cols: 10 }
+//   }, [
+  Container({}, [Header, Container({ column: false }, [Navbar, Content])])
+  // ,]
+// );
 // const App = Container({},["Hey"]);
 
 // set up ui grid object
