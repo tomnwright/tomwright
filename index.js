@@ -21,7 +21,7 @@ const Header = Container({ column: false, justify: "even" }, [
       },
       link: "https://www.linkedin.com/in/tomnw/",
     }),
-    " ",
+    "+",
     Textblock("GitHub", {
       styles: { cursor: "pointer" },
       onhover: (span, enter) => {
@@ -43,13 +43,14 @@ const Navbar = Container({}, [
 
 const Content = Container({}, ["Content", "", "", "--●----"]);
 
-const App = 
-// Container({
-//    justify: "center",column:false
-//     // maxSize: { cols: 10 }
-//   }, [
+const App =
+  // Container({
+  //    justify: "center",column:false
+  //     // maxSize: { cols: 10 }
+  //   }, [
   Container({}, [Header, Container({ column: false }, [Navbar, Content])])
-  // ,]
+
+// ,] 
 // );
 // const App = Container({},["Hey"]);
 
