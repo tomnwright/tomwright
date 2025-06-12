@@ -43,16 +43,18 @@ const Navbar = Container({}, [
 
 const Content = Container({}, ["Content", "", "", "--●----"]);
 
-const App =
-  // Container({
-  //    justify: "center",column:false
-  //     // maxSize: { cols: 10 }
-  //   }, [
-  Container({}, [Header, Container({ column: false }, [Navbar, Content])])
+const App = Container(
+  {
+    justify: "center",
+    column: false,
+  },
+  [Container({maxSize:{cols:60}}, [Header, Container({ column: false }, [Navbar, Content])])]
+);
 
-// ,] 
-// );
-// const App = Container({},["Hey"]);
+// Test: centre page
+// const App = Container({ justify: "center", column: false }, [
+//   Container({ justify: "center", column: true }, ["Hey"]),
+// ]);
 
 // set up ui grid object
 const uiGrid = new UIGrid(ui_div, App);
