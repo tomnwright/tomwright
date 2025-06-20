@@ -60,8 +60,27 @@ const App = Container(
 // Test: space-between
 // const App = Container({column:false, justify:"space-between"}, ["This", "is", "a", "test"])
 
+
+
+
+
+
+
+
+
+const TestApp = Container({}, ["Hey there!", "How's it going"])
+
+
+const uiGrid = new UIGrid(ui_div, TestApp);
+
+
+
+
+
+
+
 // set up ui grid object
-const uiGrid = new UIGrid(ui_div, App);
+// const uiGrid = new UIGrid(ui_div, App);
 // const uiGrid = new TextGrid(ui_div);
 // uiGrid.domObj.textContent = "Hey"
 
