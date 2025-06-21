@@ -32,7 +32,7 @@ const Header = Container({ column: false, justify: "space-between" }, [
   ]),
 ]);
 
-const Navbar = Container({justify:"space-between"}, [
+const Navbar = Container({}, [
   "About me",
   "Freelance",
   "Qualifications",
@@ -49,7 +49,13 @@ const App = Container(
     justify: "center",
     column: false,
   },
-  [Container({maxSize:{cols:80}}, [Header," ", Container({ column: false }, [Navbar,"       ", Content])])]
+  [
+    Container({ maxSize: { cols: 80 } }, [
+      Header,
+      " ",
+      Container({ column: false }, [Navbar, "       ", Content]),
+    ]),
+  ]
 );
 
 // Test: centre page
@@ -60,27 +66,15 @@ const App = Container(
 // Test: space-between
 // const App = Container({column:false, justify:"space-between"}, ["This", "is", "a", "test"])
 
+const TestApp = Container({ justify: "center", column: false }, [
+  "Hey there!",
+  "How's it going",
+]);
 
-
-
-
-
-
-
-
-const TestApp = Container({}, ["Hey there!", "How's it going"])
-
-
-const uiGrid = new UIGrid(ui_div, TestApp);
-
-
-
-
-
-
+// const uiGrid = new UIGrid(ui_div, TestApp);
 
 // set up ui grid object
-// const uiGrid = new UIGrid(ui_div, App);
+const uiGrid = new UIGrid(ui_div, App);
 // const uiGrid = new TextGrid(ui_div);
 // uiGrid.domObj.textContent = "Hey"
 
