@@ -10,7 +10,7 @@ const ui_div = document.getElementById("ui-grid");
 // const golGrid = new TextGrid(gol_div);
 // const gol = new GoLGrid();
 
-const Header = Container({ column: false, justify: "space-between" }, [
+const Header = Container({ gap:1, column: false, justify: "even" }, [
   "TOM WRIGHT",
   Textblock("Start typing to ask AI...", { wrap: true }),
   Container({ column: false }, [
@@ -66,15 +66,18 @@ const App = Container(
 // Test: space-between
 // const App = Container({column:false, justify:"space-between"}, ["This", "is", "a", "test"])
 
-const TestApp = Container({ justify: "center", column: false }, [
+const TestApp = Container({ 
+  justify: "even",
+  gap:5,
+  column: true }, [
   "Hey there!",
   "How's it going",
 ]);
 
-// const uiGrid = new UIGrid(ui_div, TestApp);
+const uiGrid = new UIGrid(ui_div, TestApp);
+// const uiGrid = new UIGrid(ui_div, App);
 
 // set up ui grid object
-const uiGrid = new UIGrid(ui_div, App);
 // const uiGrid = new TextGrid(ui_div);
 // uiGrid.domObj.textContent = "Hey"
 
