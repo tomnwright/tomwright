@@ -10,53 +10,53 @@ const ui_div = document.getElementById("ui-grid");
 // const golGrid = new TextGrid(gol_div);
 // const gol = new GoLGrid();
 
-const Header = Container({ gap:1, column: false, justify: "even" }, [
-  "TOM WRIGHT",
-  Textblock("Start typing to ask AI...", { wrap: true }),
-  Container({ column: false }, [
-    Textblock("LinkedIn", {
-      styles: { cursor: "pointer" },
-      onhover: (span, enter) => {
-        span.style.fontWeight = enter ? "bold" : "";
-      },
-      link: "https://www.linkedin.com/in/tomnw/",
-    }),
-    " ",
-    Textblock("GitHub", {
-      styles: { cursor: "pointer" },
-      onhover: (span, enter) => {
-        span.style.fontWeight = enter ? "bold" : "";
-      },
-      link: "https://github.com/tomnwright",
-    }),
-  ]),
-]);
+// const Header = Container({ gap:1, column: false, justify: "even" }, [
+//   "TOM WRIGHT",
+//   Textblock("Start typing to ask AI...", { wrap: true }),
+//   Container({ column: false }, [
+//     Textblock("LinkedIn", {
+//       styles: { cursor: "pointer" },
+//       onhover: (span, enter) => {
+//         span.style.fontWeight = enter ? "bold" : "";
+//       },
+//       link: "https://www.linkedin.com/in/tomnw/",
+//     }),
+//     " ",
+//     Textblock("GitHub", {
+//       styles: { cursor: "pointer" },
+//       onhover: (span, enter) => {
+//         span.style.fontWeight = enter ? "bold" : "";
+//       },
+//       link: "https://github.com/tomnwright",
+//     }),
+//   ]),
+// ]);
 
-const Navbar = Container({}, [
-  "About me",
-  "Freelance",
-  "Qualifications",
-  "Projects",
-  "Contact me",
-  "Chat",
-]);
+// const Navbar = Container({}, [
+//   "About me",
+//   "Freelance",
+//   "Qualifications",
+//   "Projects",
+//   "Contact me",
+//   "Chat",
+// ]);
 
-const Content = Container({}, ["Content", "", "", "--●----"]);
+// const Content = Container({}, ["Content", "", "", "--●----"]);
 
-// // main app
-const App = Container(
-  {
-    justify: "center",
-    column: false,
-  },
-  [
-    Container({ maxSize: { cols: 80 } }, [
-      Header,
-      " ",
-      Container({ column: false }, [Navbar, "       ", Content]),
-    ]),
-  ]
-);
+// // // main app
+// const App = Container(
+//   {
+//     justify: "center",
+//     column: false,
+//   },
+//   [
+//     Container({ maxSize: { cols: 80 } }, [
+//       Header,
+//       " ",
+//       Container({ column: false }, [Navbar, "       ", Content]),
+//     ]),
+//   ]
+// );
 
 // Test: centre page
 // const App = Container({ justify: "center", column: false }, [
@@ -67,8 +67,9 @@ const App = Container(
 // const App = Container({column:false, justify:"space-between"}, ["This", "is", "a", "test"])
 
 const TestApp = Container({ 
-  justify: "even",
-  gap:5,
+  justify: "start",
+  // gap:5,
+  pad : {colsAfter:10},
   column: true }, [
   "Hey there!",
   "How's it going",
