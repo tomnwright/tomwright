@@ -10,77 +10,72 @@ const ui_div = document.getElementById("ui-grid");
 // const golGrid = new TextGrid(gol_div);
 // const gol = new GoLGrid();
 
-// const Header = Container({ gap:1, column: false, justify: "even" }, [
-//   "TOM WRIGHT",
-//   Textblock("Start typing to ask AI...", { wrap: true }),
-//   Container({ column: false }, [
-//     Textblock("LinkedIn", {
-//       styles: { cursor: "pointer" },
-//       onhover: (span, enter) => {
-//         span.style.fontWeight = enter ? "bold" : "";
-//       },
-//       link: "https://www.linkedin.com/in/tomnw/",
-//     }),
-//     " ",
-//     Textblock("GitHub", {
-//       styles: { cursor: "pointer" },
-//       onhover: (span, enter) => {
-//         span.style.fontWeight = enter ? "bold" : "";
-//       },
-//       link: "https://github.com/tomnwright",
-//     }),
-//   ]),
-// ]);
+const Header = Container(
+  { gap: 4, column: false, justify: "space-between", pad: { rows: 1 } },
+  [
+    "TOM WRIGHT",
+    // Textblock("Start typing to ask AI...", { wrap: true }),
+    Container({ column: false }, [
+      Textblock("LinkedIn", {
+        styles: { cursor: "pointer" },
+        onhover: (span, enter) => {
+          span.style.fontWeight = enter ? "bold" : "";
+        },
+        link: "https://www.linkedin.com/in/tomnw/",
+      }),
+      " ",
+      Textblock("GitHub", {
+        styles: { cursor: "pointer" },
+        onhover: (span, enter) => {
+          span.style.fontWeight = enter ? "bold" : "";
+        },
+        link: "https://github.com/tomnwright",
+      }),
+    ]),
+  ]
+);
 
-// const Navbar = Container({}, [
-//   "About me",
-//   "Freelance",
-//   "Qualifications",
-//   "Projects",
-//   "Contact me",
-//   "Chat",
-// ]);
-
-// const Content = Container({}, ["Content", "", "", "--●----"]);
-
-// // // main app
-// const App = Container(
-//   {
-//     justify: "center",
-//     column: false,
-//   },
-//   [
-//     Container({ maxSize: { cols: 80 } }, [
-//       Header,
-//       " ",
-//       Container({ column: false }, [Navbar, "       ", Content]),
-//     ]),
-//   ]
-// );
-
-// Test: centre page
-// const App = Container({ justify: "center", column: false }, [
-//   Container({ justify: "center", column: true }, ["Hey"]),
-// ]);
-
-// Test: space-between
-// const App = Container({column:false, justify:"space-between"}, ["This", "is", "a", "test"])
-
-const TestApp = Container({ 
-  justify: "start",
-  // gap:5,
-  pad : {colsAfter:10},
-  column: true }, [
-  "Hey there!",
-  "How's it going",
+const Navbar = Container({ pad: { colsAfter: 4 } }, [
+  Textblock("> About me", { styles: { "font-weight": "bold" } }),
+  "Freelance",
+  "Qualifications",
+  "Projects",
+  "Contact me",
+  "Chat",
 ]);
 
-const uiGrid = new UIGrid(ui_div, TestApp);
-// const uiGrid = new UIGrid(ui_div, App);
+const Content = Container({}, [
+  "Hey there!",
+  "I'm Tom, welcome to my portfolio.",
+  Textblock("Here you can see some of the things I've been up to.", {
+    wrap: true,
+  }),
+]);
 
-// set up ui grid object
-// const uiGrid = new TextGrid(ui_div);
-// uiGrid.domObj.textContent = "Hey"
+// // main app
+const App = Container(
+  {
+    justify: "center",
+    column: false,
+  },
+  [
+    Container({ maxSize: { cols: 80 } }, [
+      Container({ column: false, justify: "center" }, [
+        Textblock("This site is a work in progress!", {
+          link: "https://en.wikipedia.org/wiki/Conway%27s_Game_of_Life",
+          styles: { cursor: "pointer", "font-style": "italic" },
+          onhover: (span, enter) => {
+            span.style.fontWeight = enter ? "bold" : "";
+          },
+        }),
+      ]),
+      Header,
+      Container({ column: false }, [Navbar, Content]),
+    ]),
+  ]
+);
+
+const uiGrid = new UIGrid(ui_div, App);
 
 // create the grid controlller
 const grid = new GridMaster(master_div, [uiGrid], {
