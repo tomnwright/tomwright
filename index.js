@@ -19,14 +19,21 @@ const gol = new GolEngine();
 const golGrid = new GolGrid(gol_div, gol);
 
 
+golGrid.postDraw = () => {
+  gol.fromString(ui_div.textContent);
+  golGrid.gol_to_text();
+  golGrid.restart_anim();
+}
 
 
 // create the grid controlller
 const grid = new GridMaster(master_div, [uiGrid, golGrid], {
   respace: true,
-  default_fontSize: 40,
+  default_fontSize: 15,
   min_spacing: { row: -0, col: 2 },
 });
+
+
 
 console.log("Fitting...");
 grid.fitToWindow();
@@ -34,7 +41,6 @@ grid.fitToWindow();
 
 // start GoL animation
 // gol.set_rand();
-gol.fromString(ui_div.textContent);
-golGrid.gol_to_text();
-golGrid.start_anim();
+
+
 console.log(gol.rows, gol.cols);
