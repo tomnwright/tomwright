@@ -1,1 +1,0 @@
-- Link to CV in Notion / "see this page normally"
