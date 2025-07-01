@@ -24,6 +24,7 @@ export function Textblock(
     link,
     onclick = undefined,
     onhover = undefined,
+    onmove = undefined,
     wrap = false,
   } = {}
 ) {
@@ -32,8 +33,8 @@ export function Textblock(
     // we'll return an array of spans representing the lines of our text
     let lines = [];
     // helper function to link events on each line to behavour on all lines
-    const linkEvent = (target, event, fun) =>
-      target.addEventListener(event, () => lines.forEach(fun));
+    const linkEvent = (targetSpan, event, fun) =>
+      targetSpan.addEventListener(event, (e) => lines.forEach((span)=>fun(e, span)));
 
     // helper function for creating span and applying span
     const createSpan = (textContent) => {
@@ -41,9 +42,10 @@ export function Textblock(
       span.textContent = textContent;
       Object.assign(span.style, styles);
 
-      if (onhover) linkEvent(span, "mouseenter", (s) => onhover(s, true));
-      if (onhover) linkEvent(span, "mouseleave", (s) => onhover(s, false));
+      if (onhover) linkEvent(span, "mouseenter", (e, s) => onhover(e, s, true));
+      if (onhover) linkEvent(span, "mouseleave", (e, s) => onhover(e, s, false));
       if (onclick) span.addEventListener("click", () => onclick(span));
+      if (onmove) span.addEventListener("mousemove", (e) => onmove(e));
       return span;
     };
 

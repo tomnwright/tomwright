@@ -1,4 +1,5 @@
 import { Container, Textblock } from "./lib/ui.js";
+import { CursorPopup } from "./lib/popup.js";
 
 const Project = (
   title = "Project title",
@@ -21,16 +22,39 @@ const Project = (
 };
 
 const projectList = [
-  Project("OfficeJS Addin", "Developed FIECON Powerups Office 365 add-in with 75% adoption, saving £40K annually.","https://www.linkedin.com/posts/tomnw_at-fiecon-were-using-technology-to-enhance-activity-7336734483787759616-WY3E?utm_source=share&utm_medium=member_desktop&rcm=ACoAABjc42YBPiUfkzVSPG36c0JHKBDtbn-Rj94"),
+  Project(
+    "OfficeJS Addin",
+    "Developed FIECON Powerups Office 365 add-in with 75% adoption, saving £40K annually.",
+    "https://www.linkedin.com/posts/tomnw_at-fiecon-were-using-technology-to-enhance-activity-7336734483787759616-WY3E?utm_source=share&utm_medium=member_desktop&rcm=ACoAABjc42YBPiUfkzVSPG36c0JHKBDtbn-Rj94"
+  ),
   Project(
     "University dissertation",
-    "'Deep learning and its applications', on the mathematics of neural networks","https://drive.google.com/file/d/1vHy7rvSqQRU3JVmmJXgndWkH3knlqRFU/view?usp=sharing"
+    "'Deep learning and its applications', on the mathematics of neural networks",
+    "https://drive.google.com/file/d/1vHy7rvSqQRU3JVmmJXgndWkH3knlqRFU/view?usp=sharing"
   ),
-  Project("XOR training","Training a shallow NN on the XOR problem (Python).","https://github.com/tomnwright/shallow-XOR"),
-  Project("Mobile games", "Published two mobile games to the Google Play store, developed in Unity using C#.", "https://tomnwright.itch.io/highest"),
-  Project("RSA", "Python implementation of RSA encryption.", "https://github.com/tomnwright/rsa-encryption"),
-  Project("Sky Chess", "Relaxing two-person chess designed for console.", "https://tomnwright.itch.io/skychess"),
+  Project(
+    "XOR training",
+    "Training a shallow NN on the XOR problem (Python).",
+    "https://github.com/tomnwright/shallow-XOR"
+  ),
+  Project(
+    "Mobile games",
+    "Published two mobile games to the Google Play store, developed in Unity using C#.",
+    "https://tomnwright.itch.io/highest"
+  ),
+  Project(
+    "RSA",
+    "Python implementation of RSA encryption.",
+    "https://github.com/tomnwright/rsa-encryption"
+  ),
+  Project(
+    "Sky Chess",
+    "Relaxing two-person chess designed for console.",
+    "https://tomnwright.itch.io/skychess"
+  ),
 ];
+
+const wipPopup = new CursorPopup("#popup");
 
 const Header = Container(
   { gap: 4, column: false, justify: "space-between", pad: { rows: 1 } },
@@ -40,7 +64,7 @@ const Header = Container(
     Container({ column: false }, [
       Textblock("LinkedIn", {
         styles: { cursor: "pointer" },
-        onhover: (span, enter) => {
+        onhover: (e, span, enter) => {
           span.style.fontWeight = enter ? "bold" : "";
         },
         link: "https://www.linkedin.com/in/tomnw/",
@@ -48,7 +72,7 @@ const Header = Container(
       " ",
       Textblock("GitHub", {
         styles: { cursor: "pointer" },
-        onhover: (span, enter) => {
+        onhover: (e, span, enter) => {
           span.style.fontWeight = enter ? "bold" : "";
         },
         link: "https://github.com/tomnwright",
@@ -59,13 +83,20 @@ const Header = Container(
 
 const Navbar = Container({ pad: { colsAfter: 4 } }, [
   Textblock("> About me", { styles: { "font-weight": "bold" } }),
-  "Qualifications",
-  "Projects",
-  "About this site",
-  "Contact me",
-  "Chat",
+  ...[
+    "Qualifications",
+    "Projects",
+    "About this site",
+    "Contact me",
+    "Chat",
+  ].map((t) =>
+    Textblock(t, {
+      onhover: (e, span, enter) =>
+        enter ? wipPopup.showPopup(e) : wipPopup.hidePopup(e),
+      onmove: (e) => wipPopup.updatePosition(e),
+    })
+  ),
 ]);
-
 
 // based in London
 const Content = Container({}, [
@@ -88,9 +119,7 @@ export const App = Container(
   },
   [
     Container({ maxSize: { cols: 80 } }, [
-      Container({ column: false, justify: "center" }, [
-        
-      ]),
+      Container({ column: false, justify: "center" }, []),
       Header,
       Container({ column: false }, [Navbar, Content]),
     ]),

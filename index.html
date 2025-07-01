@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Tom Wright</title>
 
-    <link rel="icon" type="image/x-icon" href="public/favicon.svg">
+    <link rel="icon" type="image/x-icon" href="public/favicon.svg" />
 
     <link
       href="https://fonts.googleapis.com/css2?family=Fira+Code&family=JetBrains+Mono&display=swap"
@@ -14,6 +14,67 @@
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
 
     <script src="src/index.js" type="module"></script>
+
+    <style>
+
+      
+        body.popup-active {
+            /* cursor: none !important; */
+        }
+
+        body.popup-active *{
+            /* cursor: none !important; */
+        }
+
+
+      .popup {
+        position: fixed;
+        background: white;
+        border: 1px solid #ddd;
+        border-radius: 8px;
+        padding: 15px;
+        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+        z-index: 1000;
+        opacity: 0;
+        visibility: hidden;
+        transform: scale(0.8);
+        transition: all 0.2s ease;
+        pointer-events: none;
+        max-width: 250px;
+        font-size: 14px;
+        line-height: 1.4;
+      }
+
+      .popup.show {
+        opacity: 1;
+        visibility: visible;
+        transform: scale(1);
+      }
+
+      .popup::before {
+        content: "";
+        position: absolute;
+        top: -8px;
+        left: 20px;
+        width: 0;
+        height: 0;
+        border-left: 8px solid transparent;
+        border-right: 8px solid transparent;
+        border-bottom: 8px solid #ddd;
+      }
+
+      .popup::after {
+        content: "";
+        position: absolute;
+        top: -7px;
+        left: 20px;
+        width: 0;
+        height: 0;
+        border-left: 8px solid transparent;
+        border-right: 8px solid transparent;
+        border-bottom: 8px solid white;
+      }
+    </style>
   </head>
   <body class="m-0 p-0 h-screen w-screen overflow-hidden bg-black font-mono">
     <div id="app" class="relative h-screen w-screen overflow-hidden">
@@ -29,7 +90,10 @@
         id="ui-grid"
         class="absolute top-0 left-0 whitespace-pre text-white cursor-default select-none px-5 py-2 _font-bold"
       ></div>
+    </div>
 
+    <div class="popup" id="popup">
+     Work in progress!
     </div>
   </body>
 </html>

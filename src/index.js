@@ -4,6 +4,16 @@ import { GolEngine } from "./lib/gol.js";
 import { GolGrid } from "./lib/golgrid.js";
 import { App } from "./app.js";
 
+// TOM W ASCII Art Generator
+console.log(`
+████████  ████████  ███    ███       ██     ██ 
+   ██     ██    ██  ████  ████       ██     ██ 
+   ██     ██    ██  ██ ████ ██       ██  █  ██ 
+   ██     ██    ██  ██  ██  ██       ██ ███ ██ 
+   ██     ████████  ██      ██       ███   ███ 
+`);
+
+
 
 const master_div = document.getElementById("master-grid");
 const ui_div = document.getElementById("ui-grid");
