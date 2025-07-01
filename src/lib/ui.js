@@ -47,26 +47,35 @@ export function Textblock(
       return span;
     };
 
-    // intialise remaining text to full string
-    let rem = text;
-    while (rem) {
-      // split the text into capped and remaining
-      const fitText = rem.slice(0, space.cols);
-      rem = rem.slice(space.cols).trim();
+    // split text by newline characters
+    const splitText = text.split("\n");
 
-      // create span and add to spans list
-      lines.push(createSpan(fitText));
+    lineLoop:
+    for (const line of splitText) {
+      // intialise remaining text to full string
+      let rem = line;
+      while (rem) {
+        // split the text into capped and remaining
+        const fitText = rem.slice(0, space.cols);
+        rem = rem.slice(space.cols).trim();
 
-      // if wrapping is not enabled, simply return the line
-      if (!wrap) break;
+        // create span and add to spans list
+        lines.push(createSpan(fitText));
+
+        // if wrapping is not enabled, return the first line
+        if (!wrap || lines.length >= space.cols) break lineLoop;
+      }
     }
 
     return lines;
+
+
+    // idea for sending updates to the GoL grid: identify HTML object by ID, then lookup own position
   };
 }
 
 export function Container(
-  { column = true, justify = "start", maxSize = {}, gap = 0, pad = 0},
+  { column = true, justify = "start", maxSize = {}, gap = 0, pad = 0 },
   children = []
 ) {
   const n = children.length;
@@ -87,15 +96,21 @@ export function Container(
     rowsBefore: num_pad ? pad : pad.rows ?? pad.rowsBefore ?? 0,
     colsBefore: num_pad ? pad : pad.cols ?? pad.colsBefore ?? 0,
     rowsAfter: num_pad ? pad : pad.rows ?? pad.rowsAfter ?? 0,
-    colsAfter: num_pad ? pad : pad.cols ?? pad.colsAfter ?? 0
+    colsAfter: num_pad ? pad : pad.cols ?? pad.colsAfter ?? 0,
   };
 
   // return a function which draws the element in a given space
   return (space) => {
     // initialise available flex space, applying maxSize
     let flexSpace = getFlexPerp({
-      rows: Math.min(space.rows, maxSize.rows ?? space.rows) - padding.rowsBefore - padding.rowsAfter,
-      cols: Math.min(space.cols, maxSize.cols ?? space.cols) - padding.colsBefore - padding.colsAfter,
+      rows:
+        Math.min(space.rows, maxSize.rows ?? space.rows) -
+        padding.rowsBefore -
+        padding.rowsAfter,
+      cols:
+        Math.min(space.cols, maxSize.cols ?? space.cols) -
+        padding.colsBefore -
+        padding.colsAfter,
     });
     // initialise cumulative space used by children
     let usedSize = { flex: 0, perp: 0 };
@@ -210,7 +225,6 @@ export function Container(
         Array.from({ length: usedSize.perp }, (_, row_index) =>
           htmlJoin(spacedElements.map((element) => element[row_index] ?? ""))
         );
-
 
     // add padding to joined element
     if (padding) joinedLines = addSpace(joinedLines, padding);

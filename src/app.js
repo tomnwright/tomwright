@@ -59,16 +59,18 @@ const Header = Container(
 
 const Navbar = Container({ pad: { colsAfter: 4 } }, [
   Textblock("> About me", { styles: { "font-weight": "bold" } }),
-  "Freelance",
   "Qualifications",
   "Projects",
+  "About this site",
   "Contact me",
   "Chat",
 ]);
 
+
+// based in London
 const Content = Container({}, [
   Textblock(
-    "Hey there! I'm Tom, welcome to my portfolio. Here you can see some of the things I've been up to.",
+    "Hi! I'm Tom.\nI'm a first-class maths grad based in London. I'm interested in AI, innovation, and building impactful tech. Here's some of the things I've been up to.",
     {
       wrap: true,
     }
@@ -87,16 +89,18 @@ export const App = Container(
   [
     Container({ maxSize: { cols: 80 } }, [
       Container({ column: false, justify: "center" }, [
-        Textblock("This site is a work in progress!", {
-          link: "https://en.wikipedia.org/wiki/Conway%27s_Game_of_Life",
-          styles: { cursor: "pointer", "font-style": "italic" },
-          onhover: (span, enter) => {
-            span.style.fontWeight = enter ? "bold" : "";
-          },
-        }),
+        
       ]),
       Header,
       Container({ column: false }, [Navbar, Content]),
     ]),
   ]
 );
+
+// Textblock("This site is a work in progress!", {
+//           link: "https://en.wikipedia.org/wiki/Conway%27s_Game_of_Life",
+//           styles: { cursor: "pointer", "font-style": "italic" },
+//           onhover: (span, enter) => {
+//             span.style.fontWeight = enter ? "bold" : "";
+//           },
+//         });
