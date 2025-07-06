@@ -12,7 +12,7 @@ console.log(`
    ██     ██    ██  ██  ██  ██       ██ ███ ██ 
    ██     ████████  ██      ██       ███   ███ 
 `);
-
+console.log("Last updated 06.07.25 23:38")
 
 
 const master_div = document.getElementById("master-grid");
@@ -45,12 +45,8 @@ const grid = new GridMaster(master_div, [uiGrid, golGrid], {
 
 
 
-console.log("Fitting...");
 grid.fitToWindow();
 
 
 // start GoL animation
 // gol.set_rand();
-
-
-console.log(gol.rows, gol.cols);

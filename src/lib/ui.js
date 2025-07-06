@@ -26,15 +26,23 @@ export function Textblock(
     onhover = undefined,
     onmove = undefined,
     wrap = false,
+    word_break = true,
+    word_break_minstemlen = 3,
+    word_break_minwraplen = 3,
   } = {}
 ) {
   if (link) onclick = () => window.open(link);
   return (space) => {
+    // if no space, return nothing
+    if (space.cols == 0 || space.rows == 0) return;
+
     // we'll return an array of spans representing the lines of our text
     let lines = [];
     // helper function to link events on each line to behavour on all lines
     const linkEvent = (targetSpan, event, fun) =>
-      targetSpan.addEventListener(event, (e) => lines.forEach((span)=>fun(e, span)));
+      targetSpan.addEventListener(event, (e) =>
+        lines.forEach((span) => fun(e, span))
+      );
 
     // helper function for creating span and applying span
     const createSpan = (textContent) => {
@@ -43,34 +51,113 @@ export function Textblock(
       Object.assign(span.style, styles);
 
       if (onhover) linkEvent(span, "mouseenter", (e, s) => onhover(e, s, true));
-      if (onhover) linkEvent(span, "mouseleave", (e, s) => onhover(e, s, false));
+      if (onhover)
+        linkEvent(span, "mouseleave", (e, s) => onhover(e, s, false));
       if (onclick) span.addEventListener("click", () => onclick(span));
       if (onmove) span.addEventListener("mousemove", (e) => onmove(e));
       return span;
     };
 
     // split text by newline characters
-    const splitText = text.split("\n");
+    const textLines = text.split("\n");
 
-    lineLoop:
-    for (const line of splitText) {
-      // intialise remaining text to full string
-      let rem = line;
-      while (rem) {
-        // split the text into capped and remaining
-        const fitText = rem.slice(0, space.cols);
-        rem = rem.slice(space.cols).trim();
+    // word loop plan
+    // if this is last available line:
+    //     reduce space by 3. If exceeding THAT space, add "..."
+    // else and no space for next word:
+    //     if word will be split with at least 3 characters on either side, split it
+    //     otherwise, put the whole word on a new line
 
-        // create span and add to spans list
-        lines.push(createSpan(fitText));
+    // loop through lines in input text
+    for (const line of textLines) {
+      // if enough space, no need for wrap
+      // NO WRAP
+      if (line.length <= space.cols) {
+        lines.push(createSpan(line));
+        if (lines.length >= space.rows) return lines;
 
-        // if wrapping is not enabled, return the first line
-        if (!wrap || lines.length >= space.cols) break lineLoop;
+        continue;
       }
+
+      // WRAP LINE
+      // initialise current line accumulator
+      let currentLine = "";
+
+      // loop through through words in line
+      for (const word of line.split(" ")) {
+        // chars remaining for word considering space character
+        const remChars = space.cols - currentLine.length - 1;
+
+        if (remChars >= word.length) {
+          currentLine += (currentLine ? " " : "") + word;
+          continue;
+        }
+
+        // run out of space... need to wrap!
+        // WRAP WORD
+
+        // note: could check for no wrap at start
+        // return early if run out of lines
+        if (!wrap || lines.length >= space.rows - 1) {
+          currentLine += (currentLine ? " " : "") + word;
+
+          const fitText =
+            currentLine.slice(0, Math.max(0, space.cols - 3)) + "...";
+          lines.push(createSpan(fitText.slice(0, space.cols)));
+          return lines;
+        }
+
+        // BREAK WORD
+        // split the text into capped and remaining
+        const stemFit = remChars - 1 >= word_break_minstemlen;
+        const wrapFit = word.length - remChars + 1 >= word_break_minwraplen;
+        const breakWord = word_break && stemFit && wrapFit;
+
+        const prewrap = breakWord ? word.slice(0, remChars - 1) : "";
+        const postwrap = breakWord ? word.slice(remChars - 1) : word;
+
+        if (prewrap) currentLine += (currentLine ? " " : "") + prewrap + "-";
+
+        // push currentLine and reset
+        lines.push(createSpan(currentLine));
+        if (lines.length >= space.rows) return lines;
+
+        if (postwrap.length <= space.cols) {
+          currentLine = postwrap;
+          continue;
+        }
+        currentLine = "";
+
+
+        // edge cases: postwrap longer than line => wrap over multiple lines
+        let rem = postwrap;
+        while (rem) {
+          if (rem.length > space.cols) {
+            const fitText = rem.slice(0, space.cols - 1);
+            rem = rem.slice(space.cols - 1).trim();
+
+            // create span and add to spans list
+            lines.push(createSpan(fitText + "-"));
+            if (lines.length >= space.rows) return lines;
+
+            currentLine = "";
+          } else {
+
+          currentLine = rem;
+          rem = "";}
+        }
+
+        // // valid word break?
+        // const longEnough = word.length > 6;
+        // const enoughBefore = remLineChars >=3 ;
+        // const enoughAfter =
+      }
+
+      if (currentLine) lines.push(createSpan(currentLine));
+      if (lines.length >= space.rows) return lines;
     }
 
     return lines;
-
 
     // idea for sending updates to the GoL grid: identify HTML object by ID, then lookup own position
   };
@@ -86,6 +173,9 @@ export function Container(
     flex: column ? rows : cols,
     perp: !column ? rows : cols,
   });
+  const checkFlexPerpFit = (obj, space) => {
+    return obj.flex > space.flex || obj.perp > space.perp;
+  };
   const getRowCol = ({ flex, perp }) => ({
     rows: column ? flex : perp,
     cols: column ? perp : flex,
@@ -157,6 +247,15 @@ export function Container(
 
         // calculate cumulative space
         const resultSize = getFlexPerp(size(result));
+        if (checkFlexPerpFit(resultSize, childSpace))
+          console.warn(
+            `Rendered object with text ${result.map(
+              (e) => e.textContent
+            )} ${JSON.stringify(
+              resultSize
+            )} larger than space provided ${JSON.stringify(childSpace)}!!`
+          );
+
         usedSize.flex += resultSize.flex + (i == n - 1 ? 0 : gap); // add rendered child size to total, accounting for gap
         usedSize.perp = Math.max(usedSize.perp, resultSize.perp);
 
@@ -236,7 +335,6 @@ export function Container(
 }
 
 function size(lines) {
-  // console.log(lines);
   const rows = lines.length;
   const cols = Math.max(
     0,
@@ -264,7 +362,6 @@ function htmlJoin(elements, separator = "") {
   return elements.reduce((frag, e, i) => {
     e = typeof e == "string" ? document.createTextNode(e) : e;
     if (!(e instanceof Node)) {
-      console.log(e);
       throw new TypeError(
         `Cannot htmlJoin [${elements}]. Element ${e} is of the wrong type.`
       );
