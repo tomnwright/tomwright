@@ -1,60 +1,8 @@
 import { Container, Textblock } from "./lib/ui.js";
-import { CursorPopup } from "./lib/popup.js";
+import { HomePage } from "./pages/home.js";
+// import { CursorPopup } from "./lib/popup.js";
 
-const Project = (
-  title = "Project title",
-  descr = "Description...",
-  link = ""
-) => {
-  return Container({ pad: { rowsBefore: 1 } }, [
-    Textblock(title, {
-      styles: { cursor: "pointer" },
-      link,
-    }),
-    Container({ pad: { colsBefore: 1 } }, [
-      Textblock(descr, {
-        wrap: true,
-        styles: { "font-style": "italic", cursor: "pointer" },
-        link,
-      }),
-    ]),
-  ]);
-};
-
-const projectList = [
-  Project(
-    "OfficeJS Addin",
-    "Developed FIECON Powerups Office 365 add-in with 75% adoption, saving £40K annually.",
-    "https://www.linkedin.com/posts/tomnw_at-fiecon-were-using-technology-to-enhance-activity-7336734483787759616-WY3E?utm_source=share&utm_medium=member_desktop&rcm=ACoAABjc42YBPiUfkzVSPG36c0JHKBDtbn-Rj94"
-  ),
-  Project(
-    "University dissertation",
-    "'Deep learning and its applications', on the mathematics of neural networks",
-    "https://drive.google.com/file/d/1vHy7rvSqQRU3JVmmJXgndWkH3knlqRFU/view?usp=sharing"
-  ),
-  Project(
-    "XOR training",
-    "Training a shallow NN on the XOR problem (Python).",
-    "https://github.com/tomnwright/shallow-XOR"
-  ),
-  Project(
-    "Mobile games",
-    "Published two mobile games to the Google Play store, developed in Unity using C#.",
-    "https://tomnwright.itch.io/highest"
-  ),
-  Project(
-    "RSA",
-    "Python implementation of RSA encryption.",
-    "https://github.com/tomnwright/rsa-encryption"
-  ),
-  Project(
-    "Sky Chess",
-    "Relaxing two-person chess designed for console.",
-    "https://tomnwright.itch.io/skychess"
-  ),
-];
-
-const wipPopup = new CursorPopup("#popup");
+// const wipPopup = new CursorPopup("#popup");
 
 const Header = Container(
   { gap: 4, column: false, justify: "space-between", pad: { rows: 1 } },
@@ -81,55 +29,105 @@ const Header = Container(
   ]
 );
 
-const Navbar = Container({ pad: { colsAfter: 4 } }, [
-  Textblock("> About me", { styles: { "font-weight": "bold" } }),
-  ...[
-    "Qualifications",
-    "Projects",
-    "About this site",
-    "Contact me",
-    "Chat",
-  ].map((t) =>
-    Textblock(t, {
-      onhover: (e, span, enter) =>
-        enter ? wipPopup.showPopup(e) : wipPopup.hidePopup(e),
-      onmove: (e) => wipPopup.updatePosition(e),
-    })
-  ),
-]);
+const Navbar = (page, setPage) => {
+  return Container({ pad: { colsAfter: 4 } }, [
+    ...[
+      "About me",
+      "Qualifications",
+      "Projects",
+      "About this site",
+      "Contact me",
+      "Chat",
+    ].map((t, i) =>
+      Textblock((i == page ? "> " : "") + t, {
+        // onhover: (e, span, enter) =>
+        //   enter ? wipPopup.showPopup(e) : wipPopup.hidePopup(e),
+        // onmove: (e) => wipPopup.updatePosition(e),
+        onclick: () => {
+          setPage(i);
+        },
+        styles: {
+          "font-weight": i == page ? "bold" : "regular",
+          cursor: "pointer",
+        },
+        onhover: (e, span, enter) => {
+          span.style.fontWeight = i == page || enter ? "bold" : "";
+        },
+      })
+    ),
+  ]);
+};
 
-// based in London
-const Content = Container({}, [
-  Textblock(
-    "Hi! I'm Tom.\nI'm a first-class maths grad based in London. I'm interested in AI, innovation, and building impactful tech. Here's some of the things I've been up to.",
-    {
-      wrap: true,
-    }
-  ),
-  " ",
-  "- - - - - - - - - - -",
-  ...projectList,
-]);
-
-// // main app
-export const App = Container(
-  {
-    justify: "center",
-    column: false,
-  },
-  [
-    Container({ maxSize: { cols: 80 } }, [
-      Container({ column: false, justify: "center" }, []),
-      Header,
-      Container({ column: false }, [Navbar, Content]),
-    ]),
-  ]
+// qualifications
+const QualPage = Textblock(
+  "I achieved a first class BSc in Mathematics from the University of Birmingham with an average score of 81%.",
+  { wrap: true }
 );
 
-// Textblock("This site is a work in progress!", {
-//           link: "https://en.wikipedia.org/wiki/Conway%27s_Game_of_Life",
-//           styles: { cursor: "pointer", "font-style": "italic" },
-//           onhover: (span, enter) => {
-//             span.style.fontWeight = enter ? "bold" : "";
-//           },
-//         });
+const ProjectsPage = Textblock("Page in progress...", {
+  styles: { "font-style": "italic" },
+});
+
+const Bullet = (text) =>
+  Container({ column: false, pad: { colsBefore: 2 } }, [
+    "- ",
+    Textblock(text, { wrap: true }),
+  ]);
+
+const SiteInfoPage = Container({ gap: 1 }, [
+  Textblock("This site is an implementation of Conway's Game of Life (see link):", {
+    wrap: true,
+    link: "https://en.wikipedia.org/wiki/Conway%27s_Game_of_Life",
+    styles: { cursor: "pointer", "font-style": "italic" },
+    onhover: (e, span, enter) => {
+      span.style.fontWeight = enter ? "bold" : "";
+    },
+  }),
+  Bullet(
+    "The app UI is rendered using a custom reactive grid system. The UI is one large HTML element, with monospace font to create the grid effect."
+  ),
+  Bullet(
+    "The UI grid is used as starting state for the Game of Life."
+  ),
+  Bullet(
+    "Each cell lives or dies in the next iteration based on its number of alive neighbours."
+  ),
+  Bullet(
+    "The site is still in progress."
+  ),
+]);
+const ContactPage = Textblock("Page in progress...", {
+  styles: { "font-style": "italic" },
+});
+const ChatPage = Textblock("Page in progress...", {
+  styles: { "font-style": "italic" },
+});
+
+// // main app
+export const App = (space, state) => {
+  const [page, setPage] = state.useState(0);
+
+  return Container(
+    {
+      justify: "center",
+      column: false,
+    },
+    [
+      Container({ maxSize: { cols: 80 } }, [
+        Container({ column: false, justify: "center" }, []),
+        Header,
+        Container({ column: false }, [
+          Navbar(page, setPage),
+          [
+            HomePage,
+            QualPage,
+            ProjectsPage,
+            SiteInfoPage,
+            ContactPage,
+            ChatPage,
+          ][page],
+        ]),
+      ]),
+    ]
+  )(space, state);
+};

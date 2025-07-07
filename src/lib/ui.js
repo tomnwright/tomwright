@@ -2,18 +2,56 @@ import { TextGrid } from "./grid.js";
 
 const SPACE_CHAR = " ";
 
+class State {
+  constructor(redraw) {
+    this.redraw = redraw;
+    this._index = 0;
+    this._store = [];
+  }
+
+  resetIndex() {
+    this._index = 0;
+  }
+
+  useState(default_value) {
+    const index = this._index; // get current index
+    this._index++; // set up index for next call
+
+    // set store if undefined
+    if (this._store[index] === undefined) {
+      this._store[index] = default_value;
+    }
+
+    const setValue = (newValue) => {
+      this._store[index] = newValue;
+      this.redraw();
+    };
+
+    return [this._store[index], setValue];
+  }
+}
+
 export class UIGrid extends TextGrid {
   constructor(domObj, root) {
     super(domObj);
 
     // root app, should return document fragment
     this.root = root;
+    this.state = new State(() => this.draw());
   }
-  draw(space) {
-    this.domObj.innerHTML = "";
+  redim({ rows, cols }) {
+    super.redim({ rows, cols });
+    this.draw();
+  }
 
-    const result = htmlJoin(this.root(space), "\n");
-    this.domObj.appendChild(result);
+  draw() {
+    // reset state indexer
+    this.state.resetIndex();
+
+    this.domObj.innerHTML = "";
+    const renderedLines = this.root(this.dims, this.state);
+
+    this.domObj.appendChild(htmlJoin(renderedLines, "\n"));
   }
 }
 
@@ -32,7 +70,7 @@ export function Textblock(
   } = {}
 ) {
   if (link) onclick = () => window.open(link);
-  return (space) => {
+  return (space, state = undefined) => {
     // if no space, return nothing
     if (space.cols == 0 || space.rows == 0) return;
 
@@ -128,7 +166,6 @@ export function Textblock(
         }
         currentLine = "";
 
-
         // edge cases: postwrap longer than line => wrap over multiple lines
         let rem = postwrap;
         while (rem) {
@@ -142,9 +179,9 @@ export function Textblock(
 
             currentLine = "";
           } else {
-
-          currentLine = rem;
-          rem = "";}
+            currentLine = rem;
+            rem = "";
+          }
         }
 
         // // valid word break?
@@ -192,7 +229,7 @@ export function Container(
   };
 
   // return a function which draws the element in a given space
-  return (space) => {
+  return (space, state) => {
     // initialise available flex space, applying maxSize
     let flexSpace = getFlexPerp({
       rows:
@@ -239,7 +276,7 @@ export function Container(
 
         // RENDER
         // call child to render in allocated space
-        let result = child(getRowCol(childSpace));
+        let result = child(getRowCol(childSpace), state);
 
         // even spacing requires padding to even size
         if (justify == "even")

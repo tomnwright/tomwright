@@ -12,29 +12,24 @@ console.log(`
    ██     ██    ██  ██  ██  ██       ██ ███ ██ 
    ██     ████████  ██      ██       ███   ███ 
 `);
-console.log("Last updated 06.07.25 23:38")
-
+console.log("Last updated 08.07.25 00:06");
 
 const master_div = document.getElementById("master-grid");
 const ui_div = document.getElementById("ui-grid");
 const gol_div = document.getElementById("gol-grid");
 
-
 // initialise UI grid
 const uiGrid = new UIGrid(ui_div, App);
-
 
 // // set up gol grid object
 const gol = new GolEngine();
 const golGrid = new GolGrid(gol_div, gol);
 
-
 golGrid.postDraw = () => {
   gol.fromString(ui_div.textContent);
   golGrid.gol_to_text();
   golGrid.restart_anim();
-}
-
+};
 
 // create the grid controlller
 const grid = new GridMaster(master_div, [uiGrid, golGrid], {
@@ -43,10 +38,7 @@ const grid = new GridMaster(master_div, [uiGrid, golGrid], {
   min_spacing: { row: -0, col: 2 },
 });
 
-
-
 grid.fitToWindow();
-
 
 // start GoL animation
 // gol.set_rand();

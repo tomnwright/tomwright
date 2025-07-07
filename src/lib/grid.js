@@ -146,9 +146,6 @@ export class GridMaster extends TextGrid {
       if (!childGrid.domObj) return;
       childGrid.redim({ rows, cols });
       childGrid.setStyles(this.styles);
-
-      // for UI grid in particular
-      childGrid.draw?.({ rows, cols });
     });
 
     // call post draw where defined
